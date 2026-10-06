@@ -1,3 +1,3 @@
-# About Araz Borji
+# Welcome to the Araz Borji's Space
 
-this is how you do 
+I won't give you instructions go ahead and explore it...
