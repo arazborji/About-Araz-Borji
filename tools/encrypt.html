@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vault encryptor</title><link rel="stylesheet" href="../css/style.css"></head><body><main class="wrap">
+<h1>Vault encryptor</h1>
+<p class="muted">Open this file from your computer (double-click it). Nothing is uploaded. Pick your private files, choose a password, then save the result as <b>vault.enc.json</b> in the main folder of your site.</p>
+<label>Private files<input id="files" type="file" multiple></label>
+<label>Password (12+ characters, a long passphrase is best)<input id="pw" type="password"></label>
+<button id="go">Encrypt and download</button><p id="msg" class="muted"></p></main>
+<script>
+const b64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
+const rd=f=>new Promise(r=>{const x=new FileReader();x.onload=()=>r(x.result.split(",")[1]);x.readAsDataURL(f)});
+go.onclick=async()=>{
+ if(!files.files.length)return msg.textContent="Choose at least one file.";
+ if(pw.value.length<12)return msg.textContent="Use a password of at least 12 characters.";
+ msg.textContent="Encrypting...";
+ const list=[];for(const f of files.files)list.push({name:f.name,data:await rd(f)});
+ const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw.value),"PBKDF2",false,["deriveKey"]);
+ const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:600000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["encrypt"]);
+ const enc=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(JSON.stringify(list)));
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({salt:b64(salt),iv:b64(iv),data:b64(enc)})],{type:"application/json"}));
+ a.download="vault.enc.json";a.click();msg.textContent="Done. Add vault.enc.json to your site and push it. Keep the original files backed up elsewhere.";
+};
+</script></body></html>

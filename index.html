@@ -1,2 +1,7 @@
-<h1>SPACE</h1></br>
-<p>by arazborji</p>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>About | SPACE</title><link rel="stylesheet" href="css/style.css"></head><body>
+<main class="wrap">
+<h1 id="hi"></h1><p>This is my personal space: what I build, what I am learning, and what I am thinking about.</p><h2>Interests</h2><p id="int"></p><h2>Studying</h2><p id="stu"></p><h2>Find me</h2><p id="soc"></p>
+</main>
+<script src="js/config.js"></script><script src="js/site.js"></script>
+<script>hi.textContent="Hi, I am "+S.owner+".";int.textContent=S.interests.join(", ")+".";stu.textContent=S.studying.join(", ")+".";soc.innerHTML=S.socials.map(s=>`<a href="${esc(s.href)}" style="margin-right:1rem">${esc(s.label)}</a>`).join("")</script>
+</body></html>

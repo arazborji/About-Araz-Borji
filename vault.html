@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vault | SPACE</title><link rel="stylesheet" href="css/style.css"></head><body>
+<main class="wrap">
+<h1>Vault</h1><p class="muted">Private notes, links and files. Enter the password to unlock.</p><input id="pw" type="password" placeholder="Password" autocomplete="current-password"><button id="go">Unlock</button><p id="msg" class="muted"></p><div id="out"></div>
+</main>
+<script src="js/config.js"></script><script src="js/site.js"></script>
+<script>
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function unlock(){msg.textContent="Unlocking...";try{
+const r=await fetch("vault.enc.json");if(!r.ok)throw 0;const v=await r.json();
+const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw.value),"PBKDF2",false,["deriveKey"]);
+const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:b64(v.salt),iterations:600000,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+const files=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(v.iv)},key,b64(v.data))));
+msg.textContent="";out.replaceChildren();
+for(const f of files){const d=document.createElement("div");d.className="item";const h=document.createElement("h3");h.textContent=f.name;d.append(h);const b=b64(f.data);
+if(/\.(md|txt)$/i.test(f.name)){const p=document.createElement("pre");p.textContent=new TextDecoder().decode(b);d.append(p)}
+else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([b]));a.download=f.name;a.textContent="Download";d.append(a)}out.append(d)}
+}catch{msg.textContent="Could not unlock. Check the password and that vault.enc.json exists."}}
+go.addEventListener("click",unlock);pw.addEventListener("keydown",e=>{if(e.key==="Enter")unlock()})</script>
+</body></html>

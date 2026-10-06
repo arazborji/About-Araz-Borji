@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Search | SPACE</title><link rel="stylesheet" href="css/style.css"></head><body>
+<main class="wrap">
+<h1>Search</h1><label>Search posts and projects<input id="q" type="search" placeholder="Type to search" autofocus></label><div id="res"></div>
+</main>
+<script src="js/config.js"></script><script src="js/site.js"></script>
+<script>let all=[...S.posts.map(p=>({t:p.title,d:p.summary,h:`post.html?id=${encodeURIComponent(p.id)}`,k:"Blog"})),...S.featured.map(p=>({t:p.title,d:p.text,h:p.href||"projects.html",k:"Project"}))];getRepos().then(r=>{all=all.concat(r.map(x=>({t:x.name,d:x.description||"",h:x.html_url,k:"Repository"})));go()});function go(){const v=q.value.toLowerCase();res.innerHTML=v?(all.filter(a=>(a.t+" "+a.d).toLowerCase().includes(v)).map(a=>`<div class="item"><a href="${esc(a.h)}">${esc(a.t)}</a> <span class="muted">${a.k}</span><p class="muted">${esc(a.d)}</p></div>`).join("")||`<p class="muted">Nothing found.</p>`):""}q.addEventListener("input",go)</script>
+</body></html>

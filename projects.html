@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Projects | SPACE</title><link rel="stylesheet" href="css/style.css"></head><body>
+<main class="wrap">
+<h1>Projects</h1><h2>Featured</h2><div id="feat"></div><h2>All repositories</h2><div id="repos"><p class="muted">Loading...</p></div>
+</main>
+<script src="js/config.js"></script><script src="js/site.js"></script>
+<script>feat.innerHTML=S.featured.map(p=>`<div class="item"><h3>${p.href?`<a href="${esc(p.href)}">${esc(p.title)}</a>`:esc(p.title)}</h3><p class="muted">${esc(p.text)}</p></div>`).join("");getRepos().then(r=>{repos.innerHTML=r.length?r.map(x=>`<div class="item"><a href="${esc(x.html_url)}">${esc(x.name)}</a><p class="muted">${esc(x.description)}</p></div>`).join(""):`<p class="muted">No repositories found. Check githubUser in js/config.js.</p>`})</script>
+</body></html>
