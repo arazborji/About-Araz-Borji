@@ -13,6 +13,6 @@ window.SPACE = {
 
   posts: [
     { id: 'hello-space', title: 'Hello, SPACE', date: '2026-10-06', summary: 'Why I built this site and what will live here.',
-      body: '<p>This is the first post. Add new posts to the posts list in js/config.js.</p>' }
+      body: '<p>This is the first post.</p>' }
   ]
 };
